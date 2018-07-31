@@ -1,0 +1,9 @@
+spring:
+  jpa:
+    properties:
+      hibernate:
+        temp.use_jdbc_metadata_defaults: false
+
+waschbaer:
+  # default value of events monitor window in hours
+  default-events-time-window: 5
