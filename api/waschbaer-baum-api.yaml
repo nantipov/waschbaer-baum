@@ -1,0 +1,165 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Waschbär watering system management service
+  license:
+    name: MIT
+
+servers:
+- url: https://nantipov.org/waschbaer/baum/api
+
+paths:
+  /events:
+    get:
+      summary: Return list of events happened
+      parameters:
+      - name: start_time
+        in: query
+        description: |
+          Start time of the events retrieval window.
+          By default -5 hours from now.
+        required: false
+        schema:
+          type: string
+          format: date-time
+      - name: end_time
+        in: query
+        description: |
+          End time of the events retrieval window.
+          If ommited, not limited by ending date.
+        required: false
+        schema:
+          type: string
+          format: date-time
+      responses:
+        200:
+          description: List of events
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Events"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    post:
+      summary: Post an event
+      requestBody:
+        description: Event to post
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Event"
+      responses:
+        201:
+          description: Null response
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /actions:
+    get:
+      summary: Retrieve a list of uncommited actions
+      responses:
+        200:
+          description: List of uncommited actions
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Actions"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    post:
+      summary: Post an action to queue
+      requestBody:
+        description: Action to post
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Action"
+      responses:
+        201:
+          description: Null response
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /commits:
+    post:
+      summary: Post commit on an action
+      requestBody:
+        description: Action to commit
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ActionCommit"
+      responses:
+        201:
+          description: Null response
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  schemas:
+    Events:
+      type: array
+      items:
+        $ref: "#/components/schemas/Event"
+    Event:
+      required:
+      - id
+      - occurred_at
+      - event_type
+      properties:
+        id:
+          type: string
+          format: uuid
+        occurred_at:
+          type: string
+          format: date-time
+        event_type:
+          type: string
+          enum: [ACTION, READING]
+        data_value:
+          type: string
+    Actions:
+      type: array
+      items:
+        $ref: "#/components/schemas/Action"
+    Action:
+      properties:
+        id:
+          type: string
+        action_type:
+          type: string
+          enum: [POUR, MEASURE]
+        arguments_data:
+          type: string
+    ActionCommit:
+      properties:
+        action_id:
+          type: string
+    Error:
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
