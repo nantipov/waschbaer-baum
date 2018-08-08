@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface EventRepository extends CrudRepository<EventEntity, Long> {
 
-    List<EventEntity> findByCreatedAtBetween(ZonedDateTime startTime, ZonedDateTime endTime);
+    List<EventEntity> findByCreatedAtBetweenOrderByCreatedAt(ZonedDateTime startTime, ZonedDateTime endTime);
 
 }

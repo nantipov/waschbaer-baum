@@ -10,6 +10,6 @@ public interface ActionRepository extends CrudRepository<ActionEntity, Long> {
 
     List<ActionEntity> findByCommittedAtIsNull();
 
-    ActionEntity findByActionId(UUID actionId); //TODO: optional?
+    ActionEntity findByActionId(UUID actionId);
 
 }

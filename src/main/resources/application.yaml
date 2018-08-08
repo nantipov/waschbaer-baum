@@ -5,5 +5,10 @@ spring:
         temp.use_jdbc_metadata_defaults: false
 
 waschbaer:
-  # default value of events monitor window in hours
-  default-events-time-window: 5
+  # default value of events monitor window in minutes
+  default-events-time-window: 10
+
+logging:
+  level:
+    root: INFO
+    org.nantipov: DEBUG

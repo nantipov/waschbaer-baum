@@ -3,6 +3,7 @@ package org.nantipov.waschbaer.waschbaerbaum.services;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.nantipov.waschbaer.waschbaerbaum.domain.EventDTO;
 import org.nantipov.waschbaer.waschbaerbaum.domain.EventEntity;
 import org.nantipov.waschbaer.waschbaerbaum.repository.EventRepository;
@@ -16,6 +17,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class EventService {
 
@@ -31,21 +33,22 @@ public class EventService {
     }
 
     public void postEvent(EventDTO eventDTO) {
+        log.debug("Posting event {}", eventDTO);
         EventEntity eventEntity = new EventEntity();
         eventEntity.setEventId(UUID.randomUUID());
         eventEntity.setEventType(eventDTO.getType());
-        eventEntity.setCreatedAt(ZonedDateTime.now());
+        eventEntity.setCreatedAt(eventDTO.getOccurredAt());
         eventEntity.setDataValue(buildJson(eventDTO.getData()));
         eventRepository.save(eventEntity);
     }
 
     public List<EventDTO> getEvents(ZonedDateTime startTime, ZonedDateTime endTime) {
-        return eventRepository.findByCreatedAtBetween(startTime, endTime).stream()
+        return eventRepository.findByCreatedAtBetweenOrderByCreatedAt(startTime, endTime).stream()
                               .map(entity -> {
                                   EventDTO eventDTO = new EventDTO();
                                   eventDTO.setId(entity.getEventId());
                                   eventDTO.setType(entity.getEventType());
-                                  eventDTO.setOccuredAt(entity.getCreatedAt());
+                                  eventDTO.setOccurredAt(entity.getCreatedAt());
                                   eventDTO.setData(parseJson(entity.getDataValue()));
                                   return eventDTO;
                               })

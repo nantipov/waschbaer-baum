@@ -1,7 +1,10 @@
 package org.nantipov.waschbaer.waschbaerbaum.domain;
 
+import lombok.Getter;
+
 import java.util.Collection;
 
+@Getter
 public class ContainerDTO<T> {
     private Collection<T> items;
 
