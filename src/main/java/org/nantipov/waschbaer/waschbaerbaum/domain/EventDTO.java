@@ -9,7 +9,6 @@ import javax.validation.constraints.NotNull;
 
 @Data
 public class EventDTO {
-    @NotNull
     private UUID id;
 
     @NotNull
@@ -18,5 +17,5 @@ public class EventDTO {
     private Map<String, Object> data;
 
     @NotNull
-    private ZonedDateTime occuredAt;
+    private ZonedDateTime occurredAt;
 }

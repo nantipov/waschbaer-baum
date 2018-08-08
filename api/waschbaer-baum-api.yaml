@@ -11,13 +11,13 @@ servers:
 paths:
   /events:
     get:
-      summary: Return list of events happened
+      summary: Return list of events happened sorted by time
       parameters:
       - name: start_time
         in: query
         description: |
           Start time of the events retrieval window.
-          By default -5 hours from now.
+          By default -10 minutes from now.
         required: false
         schema:
           type: string
@@ -121,7 +121,6 @@ components:
         $ref: "#/components/schemas/Event"
     Event:
       required:
-      - id
       - occurred_at
       - event_type
       properties:

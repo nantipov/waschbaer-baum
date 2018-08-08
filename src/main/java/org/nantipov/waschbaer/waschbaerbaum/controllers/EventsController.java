@@ -5,6 +5,7 @@ import org.nantipov.waschbaer.waschbaerbaum.domain.EventDTO;
 import org.nantipov.waschbaer.waschbaerbaum.services.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,12 +41,15 @@ public class EventsController {
     }
 
     @GetMapping
-    public ContainerDTO<EventDTO> getEvents(@RequestParam(required = false) ZonedDateTime startTime,
-                                            @RequestParam(required = false) ZonedDateTime endTime) {
+    public ContainerDTO<EventDTO> getEvents(
+            @RequestParam(name = "start_time", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+                    ZonedDateTime startTime,
+            @RequestParam(name = "end_time", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+                    ZonedDateTime endTime) {
         ZonedDateTime startTimeToProcess =
-                startTime != null ? startTime : ZonedDateTime.now().minusHours(defaultTimePeriod);
+                startTime != null ? startTime : ZonedDateTime.now().minusMinutes(defaultTimePeriod);
 
-        ZonedDateTime endTimeToProcess = endTime != null ? startTime : ZonedDateTime.now();
+        ZonedDateTime endTimeToProcess = endTime != null ? endTime : ZonedDateTime.now();
 
         return ContainerDTO.of(eventService.getEvents(startTimeToProcess, endTimeToProcess));
     }
