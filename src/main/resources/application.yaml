@@ -12,3 +12,7 @@ logging:
   level:
     root: INFO
     org.nantipov: DEBUG
+
+server:
+  port: 9001
+
